@@ -4,27 +4,32 @@ import json
 from pathlib import Path
 from typing import Dict, Tuple, Union
 
+from .errors import AccountNotFoundError
+
 PINS_PATH = Path(__file__).parent / "atm_data.json"
 
-
-def get_atm_data() -> Dict[str, Dict[str, Union[str, int]]]:
-    with contextlib.suppress(json.JSONDecodeError, FileNotFoundError):
-        with open(PINS_PATH, "r") as read_pins:
-            return json.loads(read_pins.read())
-    return {}
-
-
-def write_atm_data(atm_data: Dict[str, int]) -> None:
-    with open(PINS_PATH, "w") as write_pins:
-        write_pins.write(json.dumps(atm_data))
-
+class ATMCard:
+    def __init__(self):
+        pass
 
 class ATMMachine:
     def __init__(self) -> None:
-        self.atm_data = get_atm_data()
+        self.atm_data = self.get_atm_data()
+
+    @staticmethod
+    def get_atm_data() -> Dict[str, Dict[str, Union[str, int]]]:
+        with contextlib.suppress(json.JSONDecodeError, FileNotFoundError):
+            with open(PINS_PATH, "r") as read_pins:
+                return json.loads(read_pins.read())
+        return {}
+
+    @staticmethod
+    def write_atm_data(atm_data: Dict[str, int]) -> None:
+        with open(PINS_PATH, "w") as write_pins:
+            write_pins.write(json.dumps(atm_data))
 
     def save_pins(self) -> None:
-        write_atm_data(self.atm_data.copy())
+        self.write_atm_data(self.atm_data.copy())
 
     def create_account(self) -> Tuple[Union[str, int]]:
         print("Welcome to ATM Machine acount creation!")
@@ -57,8 +62,7 @@ class ATMMachine:
 
         account_data = self.atm_data.get(name, None)
         if account_data is None:
-            print("It seems this account name does not exist.")
-            return
+            raise AccountNotFoundError("It seems this account name does not exist.")
 
         pini = []
         while True:
