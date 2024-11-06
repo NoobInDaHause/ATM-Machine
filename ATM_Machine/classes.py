@@ -2,7 +2,7 @@ import contextlib
 import json
 
 from pathlib import Path
-from typing import Dict, Tuple, Union
+from typing import Dict, Union
 
 from errors import AccountNotFoundError, AccountAlreadyExistsError, ExitedError
 
@@ -27,21 +27,29 @@ class ATMMachine:
         name = input("Enter the name for your account: ")
 
         if name.lower() == "exit":
-            raise ExitedError("Thank you for using John's broken but Working ATM Machine!")
+            raise ExitedError(
+                "Thank you for using John's broken but Working ATM Machine!"
+            )
 
         if name in self.atm_data:
-            raise AccountAlreadyExistsError(f"It seems the name {name!r} is already registered please open an account instead.")
+            raise AccountAlreadyExistsError(
+                f"It seems the name {name!r} is already registered please open an account instead."
+            )
 
         address = input("Enter your full address: ")
         if address.lower() == "exit":
-            raise ExitedError("Thank you for using John's broken but Working ATM Machine!")
+            raise ExitedError(
+                "Thank you for using John's broken but Working ATM Machine!"
+            )
         acc_pin = []
         init_dep = []
         while True:
             try:
                 _pin = input("Enter your 4 PIN for this account: ")
                 if _pin.lower() == "exit":
-                    raise ExitedError("Thank you for using John's broken but Working ATM Machine!")
+                    raise ExitedError(
+                        "Thank you for using John's broken but Working ATM Machine!"
+                    )
                 pin = int(_pin)
             except ValueError:
                 print("Invalid input please try again.")
@@ -53,7 +61,9 @@ class ATMMachine:
             try:
                 _i_d = input("Enter your initial deposit for this account: ")
                 if name.lower() == "exit":
-                    raise ExitedError("Thank you for using John's broken but Working ATM Machine!")
+                    raise ExitedError(
+                        "Thank you for using John's broken but Working ATM Machine!"
+                    )
                 i_d = int(_i_d)
             except ValueError:
                 print("Invalid input please try again.")
@@ -69,43 +79,47 @@ class ATMMachine:
         }
         self.write_data()
 
-        print(f"Thank you for creating an account {name}! Be sure to remember your details.")
+        print(
+            f"Thank you for creating an account {name}! Be sure to remember your details."
+        )
 
     def open_account(self) -> None:
         print("Welcome to the ATM!")
         name = input("Enter the name of your account: ")
 
         if name.lower() == "exit":
-            raise ExitedError("Thank you for using John's broken but Working ATM Machine!")
+            raise ExitedError(
+                "Thank you for using John's broken but Working ATM Machine!"
+            )
         if name not in self.atm_data:
-            raise AccountNotFoundError(f"It seems the name {name!r} is not yet registered please create an account instead.")
+            raise AccountNotFoundError(
+                f"It seems the name {name!r} is not yet registered please create an account instead."
+            )
 
     def start(self) -> None:
         print("Welcome to John's broken but working ATM Machine.")
         while True:
-            try:
-                _type = input(
-                    "\nChoose an action below. (input 'exit' anytime to exit the ATM Machine.)\n\n1. Create an account.\n2. Open an account."
-                    "\n\nInput action number: "
-                )
+            _type = input(
+                "\nChoose an action below. (input 'exit' anytime to exit the ATM Machine.)\n\n1. Create an account.\n2. Open an account."
+                "\n\nInput action number: "
+            )
 
-                if _type == "1":
-                    try:
-                        self.create_account()
-                    except AccountAlreadyExistsError as aaee:
-                        print(str(aaee))
+            if _type == "1":
+                try:
+                    self.create_account()
+                except AccountAlreadyExistsError as aaee:
+                    print(str(aaee))
+                continue
+            elif _type == "2":
+                try:
+                    self.open_account()
+                except AccountNotFoundError as anfe:
+                    print(str(anfe))
                     continue
-                elif _type == "2":
-                    try:
-                        self.open_account()
-                    except AccountNotFoundError as anfe:
-                        print(str(anfe))
-                        continue
-                elif _type.lower() == "exit":
-                    raise ExitedError("Thank you for using John's broken but Working ATM Machine!")
-                else:
-                    print("Invalid input please try again.")
-                    continue
-            except ExitedError as ee:
-                print(str(ee))
-                break
+            elif _type.lower() == "exit":
+                raise ExitedError(
+                    "Thank you for using John's broken but Working ATM Machine!"
+                )
+            else:
+                print("Invalid input please try again.")
+                continue
