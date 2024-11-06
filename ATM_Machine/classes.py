@@ -4,15 +4,10 @@ import json
 from pathlib import Path
 from typing import Dict, Tuple, Union
 
-from ATM_Machine.errors import AccountNotFoundError, AccountAlreadyExistsError
+from errors import AccountNotFoundError, AccountAlreadyExistsError
 
 
 ATM_DATA_PATH = Path(__file__).parent / "atm_data.json"
-
-
-class ATMCard:
-    def __init__(self, holder_name: str):
-        self.holder_name = holder_name
 
 
 class ATMMachine:
@@ -28,7 +23,7 @@ class ATMMachine:
 
     def write_data(self) -> None:
         with open(ATM_DATA_PATH, "w") as atm_data_file:
-            atm_data_file.write(json.dumps(self.atm_data))
+            atm_data_file.write(json.dumps(self.atm_data.copy()))
 
     def create_account(self) -> Tuple[Union[str, int]]:
         print("Welcome to ATM Machine account creation!")
@@ -68,7 +63,7 @@ class ATMMachine:
             raise AccountNotFoundError(f"It seems the name {name!r} is not yet registered please create an account instead.")
 
     def start(self) -> None:
-        print("Welcome to John's Broken but working ATM Machine.")
+        print("Welcome to John's broken but working ATM Machine.")
         while True:
             _type = input(
                 "\nChoose an action below.\n\n1. Create an account.\n2. Open an account.\n3. Exit.\n\nInput action number: "
@@ -97,7 +92,7 @@ class ATMMachine:
                     print(str(anfe))
                     continue
             elif _type == "3":
-                print("Thank you for using the ATM Machine!")
+                print("Thank you for using John's broken but Working ATM Machine!")
                 break
             else:
                 print("Invalid input please try again.")

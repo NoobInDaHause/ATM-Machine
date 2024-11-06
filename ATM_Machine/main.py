@@ -1,4 +1,4 @@
-from ATM_Machine.classes import ATMMachine
+from classes import ATMMachine
 
 if __name__ == "__main__":
     atm_machine = ATMMachine()
