@@ -1,6 +1,5 @@
 import contextlib
 import json
-import logging
 
 from pathlib import Path
 from typing import Dict, Tuple, Union
@@ -19,7 +18,6 @@ class ATMCard:
 class ATMMachine:
     def __init__(self):
         self.atm_data = self.get_data()
-        self.log = logging.getLogger("ATMMachine")
 
     @staticmethod
     def get_data() -> Dict[str, Dict[str, Union[str, int]]]:
@@ -33,7 +31,7 @@ class ATMMachine:
             atm_data_file.write(json.dumps(self.atm_data))
 
     def create_account(self) -> Tuple[Union[str, int]]:
-        print("Welcome to ATM Machine acount creation!")
+        print("Welcome to ATM Machine account creation!")
         name = input("Enter the name for your account: ")
 
         if name in self.atm_data:
@@ -62,10 +60,15 @@ class ATMMachine:
                 break
         return name, address, acc_pin[0], init_dep[0]
 
-    def open_account(self) -> None: ...
+    def open_account(self) -> None:
+        print("Welcome to the ATM!")
+        name = input("Enter the name of your account: ")
+
+        if name not in self.atm_data:
+            raise AccountNotFoundError(f"It seems the name {name!r} is not yet registered please create an account instead.")
 
     def start(self) -> None:
-        print("Welcome to the ATM Machine.")
+        print("Welcome to John's Broken but working ATM Machine.")
         while True:
             _type = input(
                 "\nChoose an action below.\n\n1. Create an account.\n2. Open an account.\n3. Exit.\n\nInput action number: "
@@ -88,7 +91,11 @@ class ATMMachine:
                 )
                 continue
             elif _type == "2":
-                self.open_account()
+                try:
+                    self.open_account()
+                except AccountNotFoundError as anfe:
+                    print(str(anfe))
+                    continue
             elif _type == "3":
                 print("Thank you for using the ATM Machine!")
                 break
