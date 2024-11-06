@@ -20,3 +20,11 @@ class AccountAlreadyExistsError(ATMError):
     """
 
     pass
+
+
+class ExitedError(ATMError):
+    """
+    Raises when user exited the ATM Machine.
+    """
+
+    pass
