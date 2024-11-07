@@ -41,8 +41,8 @@ class ATMMachine:
             raise ExitedError(
                 "Thank you for using John's broken but Working ATM Machine!"
             )
-        acc_pin = []
-        init_dep = []
+        pin = 0
+        init_dep = 0
         while True:
             try:
                 _pin = input("Enter your 4 PIN for this account: ")
@@ -50,13 +50,11 @@ class ATMMachine:
                     raise ExitedError(
                         "Thank you for using John's broken but Working ATM Machine!"
                     )
-                pin = int(_pin)
+                pin += int(_pin)
+                break
             except ValueError:
                 print("Invalid input please try again.")
                 continue
-            else:
-                acc_pin.append(pin)
-                break
         while True:
             try:
                 _i_d = input("Enter your initial deposit for this account: ")
@@ -64,18 +62,16 @@ class ATMMachine:
                     raise ExitedError(
                         "Thank you for using John's broken but Working ATM Machine!"
                     )
-                i_d = int(_i_d)
+                init_dep += int(_i_d)
+                break
             except ValueError:
                 print("Invalid input please try again.")
                 continue
-            else:
-                init_dep.append(i_d)
-                break
 
         self.atm_data[name] = {
             "address": address,
-            "pin": acc_pin[0],
-            "balance": init_dep[0],
+            "pin": pin,
+            "balance": init_dep,
         }
         self.write_data()
 
@@ -91,10 +87,40 @@ class ATMMachine:
             raise ExitedError(
                 "Thank you for using John's broken but Working ATM Machine!"
             )
-        if name not in self.atm_data:
+
+        if account := self.atm_data.get(name):
+            pin = account.get("pin")
+            tries = 3
+            while True:
+                try:
+                    _p_n = input("Enter the PIN for this account: ")
+                    if name.lower() == "exit":
+                        raise ExitedError(
+                            "Thank you for using John's broken but Working ATM Machine!"
+                        )
+                    p_n = int(_p_n)
+                    if p_n != pin:
+                        tries -= 1
+                        if tries <= 0:
+                            print("This account is now terminated.")
+                            self.atm_data.pop(name, None)
+                            return
+                        else:
+                            print(f"Incorrect PIN you have {tries} more attemps or this account will be terminated.")
+                            continue
+
+                    print(f"Welcome {name}!")
+                    balance = account.get("balance")
+
+                except ValueError:
+                    print("Invalid input please try again.")
+                    continue
+        else:
             raise AccountNotFoundError(
                 f"It seems the name {name!r} is not yet registered please create an account instead."
             )
+
+
 
     def start(self) -> None:
         print("Welcome to John's broken but working ATM Machine.")
