@@ -6,4 +6,4 @@ if __name__ == "__main__":
         atm_machine = ATMMachine()
         atm_machine.start()
     except (ExitedError, KeyboardInterrupt) as EK:
-        print(str(EK))
+        print(str(EK) or "Thank you for using John's broken but Working ATM Machine!")

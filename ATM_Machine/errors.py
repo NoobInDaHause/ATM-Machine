@@ -22,6 +22,13 @@ class AccountAlreadyExistsError(ATMError):
     pass
 
 
+class AccountBlockedError(ATMError):
+    """
+    Raises when user tries to open a blocked account.
+    """
+    pass
+
+
 class ExitedError(ATMError):
     """
     Raises when user exited the ATM Machine.
