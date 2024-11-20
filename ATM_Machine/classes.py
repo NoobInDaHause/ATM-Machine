@@ -196,7 +196,9 @@ class ATMMachine:
                         saving_dep = self.get_withdraw_or_deposit_ammount()
 
                         if saving_dep > balance:
-                            print(f"You only have a balance of {balance:,}, you can not deposit that many.")
+                            print(
+                                f"You only have a balance of {balance:,}, you can not deposit that many."
+                            )
                             continue
                         if saving_dep <= 0:
                             print("You can not deposit less than or equal to 0 amount.")
